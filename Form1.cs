@@ -1,20 +1,27 @@
 //using static Form1;
 
+using System;
+using System.Xml.Schema;
+
 namespace FightMe
 {
     public partial class FightingGameMainForm : Form
     {
         public Player player1 = new(0, 0);
-        public int floorHeight = 500;
-        public double gravity = 0.9;
+
+        public int floorHeight = (1800 / 5) * 4;
+        public double gravity = 1.5;
         public System.Windows.Forms.Timer gameTimer = new();
-
-
-
+        private int xVelocityMax = 30;
+        private int xVelocityMin = -30;
+        public bool grounded;
+        private int jumps;
+        
         public FightingGameMainForm()
         {
 
             InitializeComponent();
+            Cool_image.Image = FightMe.Properties.Resources.pixil_frame_0;
             this.KeyPreview = true;
             gameTimer.Interval = 40;
             //int volval = volumeslider.Value;
@@ -26,16 +33,21 @@ namespace FightMe
             this.DoubleBuffered = true;
             gameTimer.Tick += gameloop;
             Cool_image.Location = new Point(player1.X, player1.Y);
+            punchbox.Hide();
+            player1.punchbox = punchbox;
 
-
-            /*optionsbutt.Location = new Point(this.Width / 2 - optionsbutt.Width / 2, this.Height / 2 - optionsbutt.Height / 2);
+            optionsbutt.Location = new Point(this.Width / 2 - optionsbutt.Width / 2, this.Height / 2 - optionsbutt.Height / 2);
             startbutt.Location = new Point(this.Width / 2 - startbutt.Width / 2, optionsbutt.Location.Y - exitbutt.Height);
             exitbutt.Location = new Point(this.Width / 2 - exitbutt.Width / 2, optionsbutt.Location.Y + exitbutt.Height);
             volumebutt.Location = new Point(this.Width / 2 - volumebutt.Width / 2, this.Height / 2 - volumebutt.Height / 2);
             videobutt.Location = new Point(this.Width / 2 - videobutt.Width / 2, volumebutt.Location.Y - videobutt.Height);
-            controlsbutt.Location = new Point(this.Width / 2 - controlsbutt.Width / 2, volumebutt.Location.Y + volumebutt.Height);*/
+            controlsbutt.Location = new Point(this.Width / 2 - controlsbutt.Width / 2, volumebutt.Location.Y + volumebutt.Height);
             backbutt.Location = new Point(this.Width / 2 - backbutt.Width / 2);
-           
+
+            videobutt.Hide();
+            volumebutt.Hide();
+            controlsbutt.Hide();
+            backbutt.Hide();
         }
 
         private void optionsbutt_Click(object sender, EventArgs e)
@@ -55,6 +67,7 @@ namespace FightMe
             startbutt.Hide();
             optionsbutt.Hide();
             exitbutt.Hide();
+            backbutt.Hide();
             Cool_image.Show();
             gameTimer.Start();
 
@@ -102,30 +115,80 @@ namespace FightMe
 
         void gameloop(object sender, EventArgs e)
         {
+            punchbox.Location = new Point(player1.X + 200, player1.Y + 136);
 
             grav();
-            //XMovePlayer();
+            if (player1.moving_left)
+            {
+                MoveLeft();
+            }
+            if (player1.moving_right)
+            {
+                MoveRight();
+            }
+            if (!player1.moving_left && !player1.moving_right && player1.Xvelocity < 0)
+            {
+                player1.Xvelocity = 0;
+
+            }
+            if (!player1.moving_right && !player1.moving_left && player1.Xvelocity > 0)
+            {
+                player1.Xvelocity = 0;
+            }
+            if (player1.X < 0)
+            {
+                player1.X = 0;
+                player1.Xvelocity = 0;
+            }
+            if (player1.X >= this.Width)
+            {
+                player1.X = this.Width;
+                player1.Xvelocity = 0;
+            }
+            player1.handleFrameTick();
+
         }
-
-
-        void timertick(object sender, EventArgs e)
+        void keydown(object sender, KeyEventArgs e)
         {
 
+            if (e.KeyCode == Keys.D)
+            {
+                player1.moving_right = true;
+            }
+
+            if (e.KeyCode == Keys.A)
+            {
+                player1.moving_left = true;
+            }
+
         }
-        //void keyup(object sender, KeyPressEventArgs e)
+        void keyup(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.D)
+            {
+                player1.moving_right = false;
+            }
+            if (e.KeyCode == Keys.A)
+            {
+                player1.moving_left = false;
+            }
+        }
+
+
         void keypress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == 27)
             {
                 Application.Exit();
             }
-            /* Cool_image.Location = new Point(player1.X, player1.Y);
-             if (e.KeyChar == 100)
-             {
-                 player1.moving_right = true;
-                 this.Text = player1.moving_right.ToString();
-
-             }*/
+            if (jumps == 1 && e.KeyChar == 119)
+            {
+                jump();
+            }
+            if (e.KeyChar == 117)
+            {
+                player1.punch();
+            }
         }
 
         void grav()
@@ -133,15 +196,6 @@ namespace FightMe
             player1.grounded = player1.Y + player1.height >= this.Height - floorHeight;
             if (!player1.grounded) player1.Yvelocity += (int)gravity;
             System.Threading.Thread.Sleep(1000 / 60);
-            if (player1.moving_right)
-            {
-                player1.Xvelocity += 2;
-            }
-            else
-            {
-                player1.Xvelocity = 0;
-            }
-
             if (player1.Y == floorHeight)
             {
                 player1.grounded = true;
@@ -150,6 +204,7 @@ namespace FightMe
             else
             {
                 player1.grounded = false;
+                jumps = 0;
             }
 
             if (!player1.grounded)
@@ -159,53 +214,58 @@ namespace FightMe
             }
             if (player1.Y + Cool_image.Height + player1.Yvelocity >= floorHeight)
             {
-                player1.Y = floorHeight;
+                player1.Yvelocity = 0;
                 player1.grounded = true;
+                player1.Y += (int)Math.Round(player1.Yvelocity);
             }
 
-            player1.X += (int)Math.Round(player1.Xvelocity);
+
             player1.Y += (int)Math.Round(player1.Yvelocity);
             if (player1.grounded)
             {
-                player1.Y = this.Height - floorHeight - Cool_image.Height - 1;
+                player1.Yvelocity = 0;
+                if (jumps < 1)
+                {
+                    jumps = 1;
+                }
+
+            }
+            if (player1.Y <= 0)
+            {
+                player1.Y = 0;
                 player1.Yvelocity = 0;
             }
         }
-        /* void XMovePlayer()
-         {
-             MoveLeft();
-             MoveRight();
 
-             player1.X += (int)math.round(player1.Xvelocity);
-             if (!player1.Xvelocity > 10)
-             {
-                 player1.Xvelocity = 10;
-             }
-             Cool_image.Location = new (player1.X, player1.Y);
-         }*/
-
-        public void MoveLeft(object sender, KeyPressEventArgs e)
+        public void MoveLeft()
         {
-            if (e.KeyChar == 65)
+            player1.Xvelocity -= 5;
+            player1.X += (int)Math.Round(player1.Xvelocity);
+            if (player1.Xvelocity <= xVelocityMin)
             {
-                player1.moving_left = true;
-                player1.Xvelocity -= 10;
-            }
-            else
-            {
-                player1.moving_left = false;
+                player1.Xvelocity = xVelocityMin;
             }
         }
-        public void MoveRight(object sender, KeyPressEventArgs e)
+
+        public void MoveRight()
         {
-            if (e.KeyChar == 68)
             {
-                player1.moving_right = true;
-                player1.Xvelocity += 10;
+                player1.Xvelocity += 5;
+                player1.X += (int)Math.Round(player1.Xvelocity);
+                if (player1.Xvelocity >= xVelocityMax)
+                {
+                    player1.Xvelocity = xVelocityMax;
+                }
             }
-            else
+        }
+
+        public void jump()
+        {
+            grounded = false;
+            player1.Yvelocity -= 40;
+            if (player1.Yvelocity >= 40)
             {
-                player1.moving_right = false;
+                player1.Yvelocity = 40;
             }
         }
 
@@ -219,22 +279,44 @@ namespace FightMe
             public bool moving_right;
             public bool moving_left;
             public bool grounded;
+            public bool punching;
+            public int punchtimer;
+            public PictureBox punchbox;
 
             public Player(int X, int Y)
             {
                 this.X = X;
                 this.Y = Y;
+                punchtimer = 20;
+                punching = false;
                 Xvelocity = 0;
                 Yvelocity = 0;
-                height = 50;
+                height = 400;
                 grounded = false;
                 moving_left = false;
                 moving_right = false;
             }
 
+            public void punch()
+            {
+                punchtimer = 20;
+                punching = true;
+                punchbox.Show();
+
+            }
+
+            public void handleFrameTick()
+            {
+                if (punchtimer > 0)
+                {
+                    punchtimer--;
+                }
+
+                if (punchtimer == 0)
+                {
+                    punchbox.Hide();
+                }
+            }
         }
-
-
-
     }
 }

@@ -36,7 +36,9 @@
             controlsbutt = new Button();
             backbutt = new Button();
             Cool_image = new PictureBox();
+            punchbox = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)Cool_image).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)punchbox).BeginInit();
             SuspendLayout();
             // 
             // startbutt
@@ -111,18 +113,29 @@
             // 
             // Cool_image
             // 
-            Cool_image.BackColor = Color.FromArgb(0, 192, 0);
+            Cool_image.BackColor = Color.White;
+            Cool_image.ImageLocation = "";
             Cool_image.Location = new Point(446, 203);
             Cool_image.Name = "Cool_image";
-            Cool_image.Size = new Size(141, 139);
+            Cool_image.Size = new Size(200, 400);
             Cool_image.TabIndex = 7;
             Cool_image.TabStop = false;
+            // 
+            // punchbox
+            // 
+            punchbox.BackColor = Color.Red;
+            punchbox.Location = new Point(631, 385);
+            punchbox.Name = "punchbox";
+            punchbox.Size = new Size(150, 48);
+            punchbox.TabIndex = 8;
+            punchbox.TabStop = false;
             // 
             // FightingGameMainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(2053, 1147);
+            ClientSize = new Size(2153, 1147);
+            Controls.Add(punchbox);
             Controls.Add(Cool_image);
             Controls.Add(backbutt);
             Controls.Add(controlsbutt);
@@ -132,8 +145,12 @@
             Controls.Add(optionsbutt);
             Controls.Add(startbutt);
             Name = "FightingGameMainForm";
-            Text = "Form1";
+            Text = "Fight Me";
+            KeyDown += keydown;
+            KeyPress += keypress;
+            KeyUp += keyup;
             ((System.ComponentModel.ISupportInitialize)Cool_image).EndInit();
+            ((System.ComponentModel.ISupportInitialize)punchbox).EndInit();
             ResumeLayout(false);
         }
 
@@ -147,5 +164,6 @@
         private Button controlsbutt;
         private Button backbutt;
         private PictureBox Cool_image;
+        private PictureBox punchbox;
     }
 }
