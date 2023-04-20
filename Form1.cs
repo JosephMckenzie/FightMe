@@ -7,8 +7,8 @@ namespace FightMe
 {
     public partial class FightingGameMainForm : Form
     {
-        public Player player1 = new(0, 0);
-        public Bot bot1 = new(100, 200);
+        public Player player1 = new(100, 1040);
+        public Bot bot1 = new(2300, 1040);
         public int floorHeight = (1800 / 5) * 4;
         public double gravity = 9.81;
         public System.Windows.Forms.Timer gameTimer = new();
@@ -23,6 +23,7 @@ namespace FightMe
             InitializeComponent();
             Cool_image.Image = FightMe.Properties.Resources.pixil_frame_0;
             punchbox.Image = FightMe.Properties.Resources.punchframe;
+            botbox.Image = FightMe.Properties.Resources.Botframe;
             this.KeyPreview = true;
             gameTimer.Interval = 40;
             //int volval = volumeslider.Value;
@@ -159,6 +160,10 @@ namespace FightMe
             {
                 botmoveL();
             }
+            if (bot1.X < player1.X && bot1.X > player1.X + 100)
+            {
+                botpunch();
+            }
 
         }
         void keydown(object sender, KeyEventArgs e)
@@ -291,6 +296,10 @@ namespace FightMe
                     player1.Xvelocity = xVelocityMax;
                 }
             }
+        }
+        public void botpunch()
+        {
+
         }
 
         public void jump()

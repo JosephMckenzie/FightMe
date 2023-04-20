@@ -38,9 +38,11 @@
             Cool_image = new PictureBox();
             punchbox = new PictureBox();
             botbox = new PictureBox();
+            botPbox = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)Cool_image).BeginInit();
             ((System.ComponentModel.ISupportInitialize)punchbox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)botbox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)botPbox).BeginInit();
             SuspendLayout();
             // 
             // startbutt
@@ -142,11 +144,21 @@
             botbox.TabIndex = 9;
             botbox.TabStop = false;
             // 
+            // botPbox
+            // 
+            botPbox.BackColor = Color.Lime;
+            botPbox.Location = new Point(1187, 112);
+            botPbox.Name = "botPbox";
+            botPbox.Size = new Size(150, 48);
+            botPbox.TabIndex = 10;
+            botPbox.TabStop = false;
+            // 
             // FightingGameMainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(2153, 1147);
+            Controls.Add(botPbox);
             Controls.Add(botbox);
             Controls.Add(punchbox);
             Controls.Add(Cool_image);
@@ -165,6 +177,7 @@
             ((System.ComponentModel.ISupportInitialize)Cool_image).EndInit();
             ((System.ComponentModel.ISupportInitialize)punchbox).EndInit();
             ((System.ComponentModel.ISupportInitialize)botbox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)botPbox).EndInit();
             ResumeLayout(false);
         }
 
@@ -180,5 +193,6 @@
         private PictureBox Cool_image;
         private PictureBox punchbox;
         private PictureBox botbox;
+        private PictureBox botPbox;
     }
 }
