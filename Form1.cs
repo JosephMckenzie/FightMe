@@ -21,6 +21,7 @@ namespace FightMe
 
             InitializeComponent();
             Cool_image.Image = FightMe.Properties.Resources.pixil_frame_0;
+            punchbox.Image = FightMe.Properties.Resources.punchframe;
             this.KeyPreview = true;
             gameTimer.Interval = 40;
             //int volval = volumeslider.Value;
