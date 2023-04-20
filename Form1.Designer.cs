@@ -124,7 +124,7 @@
             // punchbox
             // 
             punchbox.BackColor = Color.Red;
-            punchbox.Location = new Point(631, 385);
+            punchbox.Location = new Point(466, 112);
             punchbox.Name = "punchbox";
             punchbox.Size = new Size(150, 48);
             punchbox.TabIndex = 8;

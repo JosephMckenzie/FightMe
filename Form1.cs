@@ -8,15 +8,14 @@ namespace FightMe
     public partial class FightingGameMainForm : Form
     {
         public Player player1 = new(0, 0);
-
         public int floorHeight = (1800 / 5) * 4;
-        public double gravity = 1.5;
+        public double gravity = 9.81;
         public System.Windows.Forms.Timer gameTimer = new();
         private int xVelocityMax = 30;
         private int xVelocityMin = -30;
         public bool grounded;
         private int jumps;
-        
+
         public FightingGameMainForm()
         {
 
@@ -35,6 +34,7 @@ namespace FightMe
             Cool_image.Location = new Point(player1.X, player1.Y);
             punchbox.Hide();
             player1.punchbox = punchbox;
+            punchbox.Location = new Point(player1.X + 200, player1.Y + 136);
 
             optionsbutt.Location = new Point(this.Width / 2 - optionsbutt.Width / 2, this.Height / 2 - optionsbutt.Height / 2);
             startbutt.Location = new Point(this.Width / 2 - startbutt.Width / 2, optionsbutt.Location.Y - exitbutt.Height);
@@ -185,7 +185,7 @@ namespace FightMe
             {
                 jump();
             }
-            if (e.KeyChar == 117)
+            if (e.KeyChar == 117 && player1.punchdelaying == false)
             {
                 player1.punch();
             }
@@ -262,10 +262,10 @@ namespace FightMe
         public void jump()
         {
             grounded = false;
-            player1.Yvelocity -= 40;
-            if (player1.Yvelocity >= 40)
+            player1.Yvelocity -= 110;
+            if (player1.Yvelocity >= 110)
             {
-                player1.Yvelocity = 40;
+                player1.Yvelocity = 110;
             }
         }
 
@@ -282,12 +282,13 @@ namespace FightMe
             public bool punching;
             public int punchtimer;
             public PictureBox punchbox;
+            public bool punchdelaying;
+            public int punchdelayer;
 
             public Player(int X, int Y)
             {
                 this.X = X;
                 this.Y = Y;
-                punchtimer = 20;
                 punching = false;
                 Xvelocity = 0;
                 Yvelocity = 0;
@@ -299,9 +300,11 @@ namespace FightMe
 
             public void punch()
             {
-                punchtimer = 20;
+                punchtimer = 5;
                 punching = true;
                 punchbox.Show();
+                punchdelayer = 10;
+                punchdelaying = true;
 
             }
 
@@ -311,12 +314,22 @@ namespace FightMe
                 {
                     punchtimer--;
                 }
+                if (punchdelayer > 0)
+                {
+                    punchdelayer--;
+                }
 
                 if (punchtimer == 0)
                 {
                     punchbox.Hide();
-                    punching=false;
+                    punching = false;
+
                 }
+                if (punchdelayer == 0)
+                {
+                    punchdelaying = false;
+                }
+
             }
         }
     }
