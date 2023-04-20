@@ -7,8 +7,8 @@ namespace FightMe
 {
     public partial class FightingGameMainForm : Form
     {
-        public Player player1 = new Player(0, 0);
-        public Player Bot = new Player(0, 600);
+        public Player player1 = new(0, 0);
+        public Bot bot1 = new(100, 200);
         public int floorHeight = (1800 / 5) * 4;
         public double gravity = 9.81;
         public System.Windows.Forms.Timer gameTimer = new();
@@ -34,6 +34,7 @@ namespace FightMe
             this.DoubleBuffered = true;
             gameTimer.Tick += gameloop;
             Cool_image.Location = new Point(player1.X, player1.Y);
+            botbox.Location = new Point(bot1.X, bot1.Y);
             punchbox.Hide();
             player1.punchbox = punchbox;
             punchbox.Location = new Point(player1.X + 200, player1.Y + 136);
@@ -118,6 +119,7 @@ namespace FightMe
         void gameloop(object sender, EventArgs e)
         {
             punchbox.Location = new Point(player1.X + 200, player1.Y + 136);
+            botbox.Location = new Point(bot1.X, bot1.Y);
 
             grav();
             if (player1.moving_left)
@@ -148,6 +150,15 @@ namespace FightMe
                 player1.Xvelocity = 0;
             }
             player1.handleFrameTick();
+
+            if (bot1.X < player1.X - 100)
+            {
+                botmoveR();
+            }
+            if (bot1.X > player1.X + 100)
+            {
+                botmoveL();
+            }
 
         }
         void keydown(object sender, KeyEventArgs e)
@@ -195,6 +206,7 @@ namespace FightMe
 
         void grav()
         {
+            //for player1
             player1.grounded = player1.Y + player1.height >= this.Height - floorHeight;
             if (!player1.grounded) player1.Yvelocity += (int)gravity;
             System.Threading.Thread.Sleep(1000 / 60);
@@ -248,6 +260,26 @@ namespace FightMe
                 player1.Xvelocity = xVelocityMin;
             }
         }
+        public void botmoveL()
+        {
+            bot1.Xvelocity -= 4;
+            bot1.X += (int)Math.Round(bot1.Xvelocity);
+            if (bot1.Xvelocity <= xVelocityMin)
+            {
+                bot1.Xvelocity = xVelocityMin;
+            }
+        }
+        public void botmoveR()
+        {
+            {
+                bot1.Xvelocity += 4;
+                bot1.X += (int)Math.Round(bot1.Xvelocity);
+                if (bot1.Xvelocity >= xVelocityMax)
+                {
+                    bot1.Xvelocity = xVelocityMax;
+                }
+            }
+        }
 
         public void MoveRight()
         {
@@ -270,6 +302,29 @@ namespace FightMe
                 player1.Yvelocity = 110;
             }
         }
+
+
+
+
+
+        public class Bot
+        {
+            public int X; public int Y;
+            public bool grounded;
+            public double Xvelocity;
+            public double Yvelocity;
+            public bool moving_right;
+            public bool moving_left;
+            public Bot(int X, int Y)
+            {
+                this.X = X;
+                this.Y = Y;
+            }
+        }
+
+
+
+
 
         public class Player
         {
@@ -300,12 +355,7 @@ namespace FightMe
                 moving_right = false;
             }
 
-            public Bot(int X, int Y)
-            {
-                this.X = X;
-                this.Y = Y;
 
-            }
 
             public void punch()
             {
