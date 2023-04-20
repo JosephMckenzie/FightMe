@@ -315,6 +315,7 @@ namespace FightMe
                 if (punchtimer == 0)
                 {
                     punchbox.Hide();
+                    punching=false;
                 }
             }
         }
