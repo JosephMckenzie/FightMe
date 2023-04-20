@@ -7,12 +7,13 @@ namespace FightMe
 {
     public partial class FightingGameMainForm : Form
     {
-        public Player player1 = new(0, 0);
+        public Player player1 = new Player(0, 0);
+        public Player Bot = new Player(0, 600);
         public int floorHeight = (1800 / 5) * 4;
         public double gravity = 9.81;
         public System.Windows.Forms.Timer gameTimer = new();
-        private int xVelocityMax = 30;
-        private int xVelocityMin = -30;
+        private int xVelocityMax = 40;
+        private int xVelocityMin = -40;
         public bool grounded;
         private int jumps;
 
@@ -240,7 +241,7 @@ namespace FightMe
 
         public void MoveLeft()
         {
-            player1.Xvelocity -= 5;
+            player1.Xvelocity -= 7;
             player1.X += (int)Math.Round(player1.Xvelocity);
             if (player1.Xvelocity <= xVelocityMin)
             {
@@ -251,7 +252,7 @@ namespace FightMe
         public void MoveRight()
         {
             {
-                player1.Xvelocity += 5;
+                player1.Xvelocity += 7;
                 player1.X += (int)Math.Round(player1.Xvelocity);
                 if (player1.Xvelocity >= xVelocityMax)
                 {
@@ -297,6 +298,13 @@ namespace FightMe
                 grounded = false;
                 moving_left = false;
                 moving_right = false;
+            }
+
+            public Bot(int X, int Y)
+            {
+                this.X = X;
+                this.Y = Y;
+
             }
 
             public void punch()
