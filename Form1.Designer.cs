@@ -39,6 +39,7 @@
             punchbox = new PictureBox();
             botbox = new PictureBox();
             botPbox = new PictureBox();
+            contbutt = new Button();
             ((System.ComponentModel.ISupportInitialize)Cool_image).BeginInit();
             ((System.ComponentModel.ISupportInitialize)punchbox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)botbox).BeginInit();
@@ -153,11 +154,22 @@
             botPbox.TabIndex = 10;
             botPbox.TabStop = false;
             // 
+            // contbutt
+            // 
+            contbutt.Location = new Point(736, 300);
+            contbutt.Name = "contbutt";
+            contbutt.Size = new Size(265, 79);
+            contbutt.TabIndex = 11;
+            contbutt.Text = "continue";
+            contbutt.UseVisualStyleBackColor = true;
+            contbutt.Click += contbutt_Click;
+            // 
             // FightingGameMainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(2153, 1147);
+            Controls.Add(contbutt);
             Controls.Add(botPbox);
             Controls.Add(botbox);
             Controls.Add(punchbox);
@@ -194,5 +206,6 @@
         private PictureBox punchbox;
         private PictureBox botbox;
         private PictureBox botPbox;
+        private Button contbutt;
     }
 }

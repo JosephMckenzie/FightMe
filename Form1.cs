@@ -2,6 +2,7 @@
 
 using System;
 using System.Xml.Schema;
+using static FightMe.FightingGameMainForm;
 
 namespace FightMe
 {
@@ -21,9 +22,10 @@ namespace FightMe
         {
 
             InitializeComponent();
-            Cool_image.Image = FightMe.Properties.Resources.pixil_frame_0;
+            Cool_image.Image = FightMe.Properties.Resources.roboframe10;
             punchbox.Image = FightMe.Properties.Resources.punchframe;
             botbox.Image = FightMe.Properties.Resources.Botframe;
+            botPbox.Image = FightMe.Properties.Resources.botpunch;
             this.KeyPreview = true;
             gameTimer.Interval = 40;
             //int volval = volumeslider.Value;
@@ -37,7 +39,9 @@ namespace FightMe
             Cool_image.Location = new Point(player1.X, player1.Y);
             botbox.Location = new Point(bot1.X, bot1.Y);
             punchbox.Hide();
+            botPbox.Hide();
             player1.punchbox = punchbox;
+            bot1.botPbox = botPbox;
             punchbox.Location = new Point(player1.X + 200, player1.Y + 136);
 
             optionsbutt.Location = new Point(this.Width / 2 - optionsbutt.Width / 2, this.Height / 2 - optionsbutt.Height / 2);
@@ -52,6 +56,7 @@ namespace FightMe
             volumebutt.Hide();
             controlsbutt.Hide();
             backbutt.Hide();
+            contbutt.Hide();
         }
 
         private void optionsbutt_Click(object sender, EventArgs e)
@@ -116,7 +121,22 @@ namespace FightMe
             controlsbutt.Hide();
             // subtitles.Show();
         }
-
+        private void contbutt_Click(object sender, EventArgs e)
+        {
+            startbutt.Show();
+            exitbutt.Show();
+            optionsbutt.Show();
+        }
+        public void gameend()
+        {
+            gameTimer.Stop();
+            contbutt.Show();
+            Cool_image.Hide();
+            botbox.Hide();
+            punchbox.Hide();
+            botPbox.Hide();
+            
+        }
         void gameloop(object sender, EventArgs e)
         {
             punchbox.Location = new Point(player1.X + 200, player1.Y + 136);
@@ -151,20 +171,29 @@ namespace FightMe
                 player1.Xvelocity = 0;
             }
             player1.handleFrameTick();
+            botPbox.Location = new Point(bot1.X - 150, bot1.Y + 137);
 
-            if (bot1.X < player1.X - 100)
+            if (bot1.X < player1.X + 300)
             {
                 botmoveR();
             }
-            if (bot1.X > player1.X + 100)
+            if (bot1.X > player1.X + 300)
             {
                 botmoveL();
             }
-            if (bot1.X < player1.X && bot1.X > player1.X + 100)
+            if (bot1.X > player1.X && bot1.X < player1.X + 300 && bot1.Bpunchdelaying == false)
             {
-                botpunch();
+                bot1.botpunch();
+                if (bot1.X + 150 <= player1.X + 200 && bot1.X + 150 >= player1.X && bot1.Y + 137 > player1.Y && bot1.Y + 137 < player1.Y + 400)
+                {
+                    player1.health -= 5;
+                }
             }
-
+            bot1.botFrameTick();
+            if ((player1.health <= 0) || (bot1.bhealth <= 0) || (player1.health <= 0 && bot1.bhealth <= 0))
+            {
+                gameend();
+            }
         }
         void keydown(object sender, KeyEventArgs e)
         {
@@ -206,6 +235,10 @@ namespace FightMe
             if (e.KeyChar == 117 && player1.punchdelaying == false)
             {
                 player1.punch();
+                if( player1.X +350 >= bot1.X && player1.X +350  <= bot1.X + 200 && player1.Y + 137 >= bot1.Y && player1.Y + 137 <= bot1.Y + 400)
+                {
+                    bot1.bhealth -= 5;
+                }
             }
         }
 
@@ -297,10 +330,7 @@ namespace FightMe
                 }
             }
         }
-        public void botpunch()
-        {
 
-        }
 
         public void jump()
         {
@@ -319,15 +349,53 @@ namespace FightMe
         public class Bot
         {
             public int X; public int Y;
+            public int bhealth;
             public bool grounded;
             public double Xvelocity;
             public double Yvelocity;
             public bool moving_right;
             public bool moving_left;
+            public bool Bpunching;
+            public int Bpunchtimer;
+            public PictureBox botPbox;
+            public bool Bpunchdelaying;
+            public int Bpunchdelayer;
             public Bot(int X, int Y)
             {
                 this.X = X;
                 this.Y = Y;
+                bhealth = 100;
+            }
+            public void botpunch()
+            {
+                Bpunchtimer = 5;
+                Bpunching = true;
+                botPbox.Show();
+                Bpunchdelayer = 40;
+                Bpunchdelaying = true;
+                
+            }
+            public void botFrameTick()
+            {
+                if (Bpunchtimer > 0)
+                {
+                    Bpunchtimer--;
+                }
+                if (Bpunchdelayer > 0)
+                {
+                    Bpunchdelayer--;
+                }
+
+                if (Bpunchtimer == 0)
+                {
+                    botPbox.Hide();
+                    Bpunching = false;
+
+                }
+                if (Bpunchdelayer == 0)
+                {
+                    Bpunchdelaying = false;
+                }
             }
         }
 
@@ -339,6 +407,7 @@ namespace FightMe
         {
             public int X;
             public int Y;
+            public int health;
             public double Xvelocity;
             public double Yvelocity;
             public int height;
@@ -355,6 +424,7 @@ namespace FightMe
             {
                 this.X = X;
                 this.Y = Y;
+                health = 100;
                 punching = false;
                 Xvelocity = 0;
                 Yvelocity = 0;
@@ -400,5 +470,7 @@ namespace FightMe
 
             }
         }
+
+        
     }
 }

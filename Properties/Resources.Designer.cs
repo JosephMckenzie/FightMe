@@ -73,9 +73,9 @@ namespace FightMe.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap pixil_frame_0 {
+        internal static System.Drawing.Bitmap botpunch {
             get {
-                object obj = ResourceManager.GetObject("pixil-frame-0", resourceCulture);
+                object obj = ResourceManager.GetObject("botpunch", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -86,6 +86,16 @@ namespace FightMe.Properties {
         internal static System.Drawing.Bitmap punchframe {
             get {
                 object obj = ResourceManager.GetObject("punchframe", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap roboframe10 {
+            get {
+                object obj = ResourceManager.GetObject("roboframe10", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
