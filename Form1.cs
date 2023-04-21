@@ -57,6 +57,7 @@ namespace FightMe
             controlsbutt.Hide();
             backbutt.Hide();
             contbutt.Hide();
+            winTBox.Hide();
         }
 
         private void optionsbutt_Click(object sender, EventArgs e)
@@ -79,7 +80,8 @@ namespace FightMe
             backbutt.Hide();
             Cool_image.Show();
             gameTimer.Start();
-
+            player1.health = 100;
+            bot1.bhealth = 100;
 
 
         }
@@ -126,16 +128,31 @@ namespace FightMe
             startbutt.Show();
             exitbutt.Show();
             optionsbutt.Show();
+            winTBox.Hide();
+            contbutt.Hide();
         }
         public void gameend()
         {
             gameTimer.Stop();
             contbutt.Show();
+            winTBox.Show();
             Cool_image.Hide();
             botbox.Hide();
             punchbox.Hide();
             botPbox.Hide();
-            
+            if (player1.health > bot1.bhealth)
+            {
+                winTBox.Text = ("Player 1 wins!");
+            }
+            if (bot1.bhealth > player1.health)
+            {
+                winTBox.Text = ("Bot wins !");
+            }
+            else
+            {
+                winTBox.Text = ("draw");
+            }
+
         }
         void gameloop(object sender, EventArgs e)
         {
@@ -190,7 +207,7 @@ namespace FightMe
                 }
             }
             bot1.botFrameTick();
-            if ((player1.health <= 0) || (bot1.bhealth <= 0) || (player1.health <= 0 && bot1.bhealth <= 0))
+            if (player1.health <= 0 || bot1.bhealth <= 0)
             {
                 gameend();
             }
@@ -235,7 +252,7 @@ namespace FightMe
             if (e.KeyChar == 117 && player1.punchdelaying == false)
             {
                 player1.punch();
-                if( player1.X +350 >= bot1.X && player1.X +350  <= bot1.X + 200 && player1.Y + 137 >= bot1.Y && player1.Y + 137 <= bot1.Y + 400)
+                if (player1.X + 350 >= bot1.X && player1.X + 350 <= bot1.X + 200 && player1.Y + 137 >= bot1.Y && player1.Y + 137 <= bot1.Y + 400)
                 {
                     bot1.bhealth -= 5;
                 }
@@ -373,7 +390,7 @@ namespace FightMe
                 botPbox.Show();
                 Bpunchdelayer = 40;
                 Bpunchdelaying = true;
-                
+
             }
             public void botFrameTick()
             {
@@ -471,6 +488,6 @@ namespace FightMe
             }
         }
 
-        
+
     }
 }

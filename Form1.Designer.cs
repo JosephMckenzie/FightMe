@@ -40,6 +40,7 @@
             botbox = new PictureBox();
             botPbox = new PictureBox();
             contbutt = new Button();
+            winTBox = new TextBox();
             ((System.ComponentModel.ISupportInitialize)Cool_image).BeginInit();
             ((System.ComponentModel.ISupportInitialize)punchbox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)botbox).BeginInit();
@@ -164,11 +165,20 @@
             contbutt.UseVisualStyleBackColor = true;
             contbutt.Click += contbutt_Click;
             // 
+            // winTBox
+            // 
+            winTBox.Location = new Point(745, 56);
+            winTBox.Name = "winTBox";
+            winTBox.ReadOnly = true;
+            winTBox.Size = new Size(252, 23);
+            winTBox.TabIndex = 12;
+            // 
             // FightingGameMainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(2153, 1147);
+            Controls.Add(winTBox);
             Controls.Add(contbutt);
             Controls.Add(botPbox);
             Controls.Add(botbox);
@@ -191,6 +201,7 @@
             ((System.ComponentModel.ISupportInitialize)botbox).EndInit();
             ((System.ComponentModel.ISupportInitialize)botPbox).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -207,5 +218,6 @@
         private PictureBox botbox;
         private PictureBox botPbox;
         private Button contbutt;
+        private TextBox winTBox;
     }
 }
